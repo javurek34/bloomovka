@@ -1,386 +1,583 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investiční Master 2026 | Kalkulačka & Portfolio</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bloomova taxonomie — nástroj pro tvorbu výukových cílů</title>
+<meta name="description" content="Interaktivní nástroj pro učitele: vyberte úroveň Bloomovy taxonomie, prozkoumejte aktivní slovesa a sestavte výukový cíl.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6F6F2;
+  --ink:#22271F;
+  --ink-soft:#5C6157;
+  --line:#DDDED6;
+  --card:#FFFFFF;
+  --l1:#5B7FA6; --l1-soft:#E8EEF5;
+  --l2:#3E9487; --l2-soft:#E3F1EE;
+  --l3:#7C9C3F; --l3-soft:#EEF3E1;
+  --l4:#C9931F; --l4-soft:#F8F0DB;
+  --l5:#CC6B3A; --l5-soft:#F9EAE1;
+  --l6:#B5486F; --l6-soft:#F7E5EC;
+  --accent:var(--l1);
+  --accent-soft:var(--l1-soft);
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+body{
+  font-family:'Google Sans Flex',system-ui,sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.6;
+  font-size:16px;
+}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
 
-    <style>
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #64748b;
-            --success: #059669;
-            --danger: #ef4444;
-            --bg: #f8fafc;
-            --card: #ffffff;
-        }
+/* ---------- hlavička ---------- */
+header{padding:56px 0 8px}
+.eyebrow{
+  font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:14px;
+}
+h1{
+  font-family:'Google Sans Flex',sans-serif;
+  font-weight:800;
+  font-size:clamp(34px,5.4vw,58px);
+  line-height:1.05;
+  letter-spacing:-.05em;
+  max-width:18ch;
+}
+h1 .grad{
+  background:linear-gradient(90deg,var(--l1),var(--l2),var(--l3),var(--l4),var(--l5),var(--l6));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.lede{margin-top:18px;max-width:62ch;color:var(--ink-soft);font-size:17px}
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg);
-            color: #0f172a;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
+/* ---------- schodiště úrovní (signatura) ---------- */
+.stairs{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
+  align-items:end;
+  margin:44px 0 0;
+}
+.step{
+  border:1px solid var(--line);
+  border-bottom-width:5px;
+  border-radius:12px 12px 6px 6px;
+  background:var(--card);
+  cursor:pointer;
+  text-align:left;
+  padding:14px 12px 12px;
+  display:flex;flex-direction:column;justify-content:flex-end;gap:4px;
+  font-family:inherit;
+  transition:transform .18s ease, background .18s ease, border-color .18s ease;
+  position:relative;
+}
+.step:nth-child(1){height:118px;border-bottom-color:var(--l1)}
+.step:nth-child(2){height:140px;border-bottom-color:var(--l2)}
+.step:nth-child(3){height:162px;border-bottom-color:var(--l3)}
+.step:nth-child(4){height:184px;border-bottom-color:var(--l4)}
+.step:nth-child(5){height:206px;border-bottom-color:var(--l5)}
+.step:nth-child(6){height:228px;border-bottom-color:var(--l6)}
+.step:hover{transform:translateY(-4px)}
+.step:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.step .num{
+  font-family:'Google Sans Flex',sans-serif;font-weight:600;
+  font-size:13px;color:var(--ink-soft);
+}
+.step .name{
+  font-family:'Google Sans Flex',sans-serif;font-weight:700;
+  font-size:clamp(14px,1.7vw,19px);line-height:1.1;letter-spacing:-.03em;
+}
+.step .hint{font-size:12px;color:var(--ink-soft);line-height:1.35}
+.step.active{background:var(--step-soft);border-color:var(--step-color)}
+.step.active::after{
+  content:"";position:absolute;left:50%;bottom:-15px;transform:translateX(-50%);
+  border:7px solid transparent;border-top-color:var(--step-color);
+}
+.step:nth-child(1){--step-color:var(--l1);--step-soft:var(--l1-soft)}
+.step:nth-child(2){--step-color:var(--l2);--step-soft:var(--l2-soft)}
+.step:nth-child(3){--step-color:var(--l3);--step-soft:var(--l3-soft)}
+.step:nth-child(4){--step-color:var(--l4);--step-soft:var(--l4-soft)}
+.step:nth-child(5){--step-color:var(--l5);--step-soft:var(--l5-soft)}
+.step:nth-child(6){--step-color:var(--l6);--step-soft:var(--l6-soft)}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+@media (max-width:680px){
+  .stairs{grid-template-columns:1fr 1fr;align-items:stretch}
+  .step,.step:nth-child(n){height:auto;min-height:88px}
+  .step.active::after{display:none}
+}
 
-        /* Navigace */
-        .nav {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
-            background: var(--card);
-            padding: 10px;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
+/* ---------- panel úrovně ---------- */
+.panel{
+  margin-top:34px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-top:6px solid var(--accent);
+  border-radius:var(--radius);
+  padding:34px clamp(20px,4vw,44px) 40px;
+}
+.panel-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 18px}
+.panel-head h2{
+  font-family:'Google Sans Flex',sans-serif;font-weight:700;
+  font-size:clamp(26px,4vw,40px);color:var(--accent);letter-spacing:-.04em;
+}
+.panel-head .en{font-size:14px;color:var(--ink-soft);font-weight:500}
+.panel .question{
+  margin-top:6px;font-size:15px;color:var(--ink-soft);font-style:italic;
+}
+.cols{display:grid;grid-template-columns:1.1fr .9fr;gap:34px;margin-top:26px}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+h3{
+  font-family:'Google Sans Flex',sans-serif;font-weight:600;font-size:15px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);
+  margin-bottom:12px;
+}
+.does{padding-left:0;list-style:none;display:grid;gap:9px}
+.does li{
+  position:relative;padding-left:22px;font-size:15.5px;
+}
+.does li::before{
+  content:"";position:absolute;left:0;top:9px;width:9px;height:9px;border-radius:3px;
+  background:var(--accent);
+}
+.examples{display:grid;gap:10px}
+.examples blockquote{
+  background:var(--accent-soft);
+  border-left:4px solid var(--accent);
+  border-radius:0 10px 10px 0;
+  padding:12px 14px;font-size:14.5px;
+}
+.examples blockquote b{font-weight:600}
 
-        .nav a {
-            cursor: pointer;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            color: var(--secondary);
-            transition: all 0.3s;
-            text-decoration: none;
-        }
+/* ---------- zásobník sloves ---------- */
+.verbs-head{
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;
+  gap:12px;margin:36px 0 14px;
+}
+.verbs-head h3{margin:0}
+.verbs-head .count{font-size:13px;color:var(--ink-soft)}
+.search{
+  border:1px solid var(--line);border-radius:99px;background:var(--paper);
+  padding:8px 16px;font:inherit;font-size:14px;min-width:230px;color:var(--ink);
+}
+.search:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  font:inherit;font-size:14.5px;font-weight:500;
+  border:1px solid var(--line);border-radius:99px;
+  background:var(--paper);color:var(--ink);
+  padding:7px 15px;cursor:pointer;
+  transition:background .15s ease,border-color .15s ease,color .15s ease;
+}
+.chip:hover{background:var(--accent-soft);border-color:var(--accent)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chip.selected{background:var(--accent);border-color:var(--accent);color:#fff}
+.chips-empty{color:var(--ink-soft);font-size:14px;padding:6px 2px;display:none}
+.verbs-note{margin-top:14px;font-size:13px;color:var(--ink-soft)}
 
-        .nav a.active {
-            background: var(--primary);
-            color: white;
-        }
+/* ---------- skladač cíle ---------- */
+.builder{
+  margin:46px 0 0;
+  background:var(--ink);
+  color:#F2F3EE;
+  border-radius:var(--radius);
+  padding:34px clamp(20px,4vw,44px) 38px;
+}
+.builder h2{
+  font-family:'Google Sans Flex',sans-serif;font-weight:700;
+  font-size:clamp(22px,3.4vw,32px);letter-spacing:-.04em;
+}
+.builder p.sub{color:#B9BDB2;font-size:14.5px;margin-top:8px;max-width:64ch}
+.fields{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px}
+@media (max-width:860px){.fields{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.fields{grid-template-columns:1fr}}
+.field label{
+  display:block;font-size:12px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:#B9BDB2;margin-bottom:7px;
+}
+.field input{
+  width:100%;font:inherit;font-size:15px;
+  background:#31372C;border:1px solid #4A5043;border-radius:10px;
+  color:#F2F3EE;padding:11px 13px;
+}
+.field input::placeholder{color:#8A9082}
+.field input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.field .opt{font-weight:400;text-transform:none;letter-spacing:0;color:#8A9082}
+.result{
+  margin-top:26px;background:#31372C;border:1px dashed #5A6052;
+  border-radius:12px;padding:20px 22px;
+  font-family:'Google Sans Flex',sans-serif;font-weight:600;
+  font-size:clamp(17px,2.4vw,22px);line-height:1.45;min-height:64px;letter-spacing:-.02em;
+}
+.result .ph{color:#8A9082;font-weight:400;font-family:'Google Sans Flex',sans-serif;font-size:15px}
+.builder-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+.btn{
+  font:inherit;font-size:14.5px;font-weight:600;cursor:pointer;
+  border-radius:99px;padding:10px 22px;border:1px solid transparent;
+  transition:transform .15s ease,opacity .15s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-ghost{background:transparent;border-color:#5A6052;color:#F2F3EE}
+.checklist{margin-top:26px;border-top:1px solid #4A5043;padding-top:20px}
+.checklist h3{color:#B9BDB2}
+.checklist ul{list-style:none;display:grid;gap:7px;grid-template-columns:1fr 1fr}
+@media (max-width:680px){.checklist ul{grid-template-columns:1fr}}
+.checklist li{font-size:14px;color:#D7DACF;padding-left:20px;position:relative}
+.checklist li::before{content:"✓";position:absolute;left:0;color:var(--accent)}
 
-        /* Společné prvky */
-        .page { display: none; animation: fadeIn 0.4s ease; }
-        .page.active { display: block; }
+/* ---------- patička ---------- */
+footer{padding:44px 0 56px;color:var(--ink-soft);font-size:13.5px}
+footer p+p{margin-top:8px}
+footer a{color:inherit}
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card {
-            background: var(--card);
-            padding: 24px;
-            border-radius: 16px;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-
-        .grid-2 { display: grid; grid-template-columns: 350px 1fr; gap: 20px; }
-        @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
-
-        h1, h2 { margin-top: 0; color: #1e293b; }
-
-        /* Formuláře */
-        .input-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 5px; color: var(--secondary); }
-        input, select {
-            width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; box-sizing: border-box;
-        }
-
-        .step-up-box {
-            background: #eff6ff; border: 1px dashed var(--primary); padding: 15px; border-radius: 12px; margin: 15px 0;
-        }
-
-        /* Výsledky */
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-item { background: #f1f5f9; padding: 15px; border-radius: 12px; border-bottom: 4px solid var(--primary); }
-        .stat-item.green { border-bottom-color: var(--success); }
-        .stat-item h4 { margin: 0; font-size: 0.75rem; text-transform: uppercase; color: var(--secondary); }
-        .stat-item p { margin: 8px 0 0; font-size: 1.25rem; font-weight: 800; }
-
-        /* Tlačítka */
-        .btn {
-            width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s;
-        }
-        .btn-primary { background: var(--primary); color: white; margin-bottom: 10px; }
-        .btn-pdf { background: #0f172a; color: white; }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-
-        /* Tabulky */
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #e2e8f0; }
-        th { background: #f8fafc; color: var(--secondary); font-size: 0.8rem; }
-        .del-btn { color: var(--danger); cursor: pointer; font-weight: bold; }
-
-        .chart-container { height: 400px; position: relative; }
-    </style>
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#fff;font-size:14px;font-weight:500;
+  padding:10px 20px;border-radius:99px;opacity:0;pointer-events:none;
+  transition:opacity .25s ease,transform .25s ease;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
 </head>
 <body>
 
-<div class="container" id="main-content">
-    <nav class="nav no-print">
-        <a onclick="showPage('calc')" id="link-calc" class="active">Kalkulačka</a>
-        <a onclick="showPage('portfolio')" id="link-portfolio">Moje Portfolio</a>
-        <a onclick="showPage('history')" id="link-history">Historie trhů</a>
-    </nav>
+<header class="wrap">
+  <p class="eyebrow">Nástroj pro učitele · revidovaná Bloomova taxonomie</p>
+  <h1>Od slovesa<br>k <span class="grad">výukovému cíli</span></h1>
+  <p class="lede">Vyberte úroveň myšlení, se kterou chcete v hodině pracovat. Stránka vám ukáže,
+  co žák na dané úrovni dělá, nabídne rozsáhlý zásobník aktivních sloves a pomůže vám
+  z nich sestavit konkrétní, ověřitelný výukový cíl.</p>
+</header>
 
-    <div id="page-calc" class="page active">
-        <div class="grid-2">
-            <div class="card no-print">
-                <h2>Nastavení</h2>
-                <div class="input-group">
-                    <label>Měna</label>
-                    <select id="currency" onchange="calculate()">
-                        <option value="Kč">CZK (Kč)</option>
-                        <option value="€">EUR (€)</option>
-                        <option value="$">USD ($)</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Počáteční vklad</label>
-                    <input type="number" id="initialDeposit" value="100000">
-                </div>
-                <div class="input-group">
-                    <label>Měsíční příspěvek</label>
-                    <input type="number" id="monthlyStep" value="5000">
-                </div>
-                
-                <div class="step-up-box">
-                    <label style="color:var(--primary)">Pravidelné navyšování (Step-up)</label>
-                    <div style="display:flex; gap:10px;">
-                        <div><small>Každých (let)</small><input type="number" id="incYears" value="5"></div>
-                        <div><small>Zvýšit o (měsíčně)</small><input type="number" id="incAmount" value="2000"></div>
-                    </div>
-                </div>
+<main class="wrap">
 
-                <div class="input-group">
-                    <label>Doba (let)</label>
-                    <input type="number" id="years" value="25">
-                </div>
-                <div class="input-group">
-                    <label>Úrok (% p.a.)</label>
-                    <input type="number" id="rate" value="8" step="0.1">
-                </div>
-                <div class="input-group">
-                    <label>Inflace (% p.a.)</label>
-                    <input type="number" id="inflation" value="3" step="0.1">
-                </div>
-                <div class="input-group">
-                    <label>Frekvence úročení</label>
-                    <select id="compounding">
-                        <option value="12">Měsíčně</option>
-                        <option value="4">Kvartálně</option>
-                        <option value="1" selected>Ročně</option>
-                    </select>
-                </div>
-                <button class="btn btn-primary" onclick="calculate()">Vypočítat</button>
-                <button class="btn btn-pdf" onclick="exportPDF()">Export do PDF</button>
-            </div>
+  <div class="stairs" role="tablist" aria-label="Úrovně Bloomovy taxonomie" id="stairs"></div>
 
-            <div class="card" id="pdf-area">
-                <div class="stats">
-                    <div class="stat-item">
-                        <h4>Naspořená částka</h4>
-                        <p id="resTotal">0</p>
-                    </div>
-                    <div class="stat-item">
-                        <h4>Celkové vklady</h4>
-                        <p id="resDeposits">0</p>
-                    </div>
-                    <div class="stat-item green">
-                        <h4>Reálná hodnota (dnes)</h4>
-                        <p id="resReal">0</p>
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="mainChart"></canvas>
-                </div>
-            </div>
-        </div>
+  <section class="panel" id="panel" aria-live="polite">
+    <div class="panel-head">
+      <h2 id="levelName"></h2>
+      <span class="en" id="levelEn"></span>
+    </div>
+    <p class="question" id="levelQuestion"></p>
+
+    <div class="cols">
+      <div>
+        <h3>Co žák na této úrovni dělá</h3>
+        <ul class="does" id="levelDoes"></ul>
+      </div>
+      <div>
+        <h3>Příklady výukových cílů</h3>
+        <div class="examples" id="levelExamples"></div>
+      </div>
     </div>
 
-    <div id="page-portfolio" class="page card">
-        <h2>Evidence reálných nákupů</h2>
-        <p>Sledujte své průměrné nákupní ceny. Data jsou uložena ve vašem prohlížeči.</p>
-        <div class="grid-2" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-            <div class="input-group">
-                <label>Ticker / Název</label>
-                <input type="text" id="pTicker" placeholder="např. VWCE nebo ČEZ">
-            </div>
-            <div class="input-group">
-                <label>Počet kusů</label>
-                <input type="number" id="pShares" step="0.001">
-            </div>
-            <div class="input-group">
-                <label>Nákupní cena (za kus)</label>
-                <input type="number" id="pPrice">
-            </div>
-            <div class="input-group">
-                <label>&nbsp;</label>
-                <button class="btn btn-primary" onclick="addAsset()">Přidat do portfolia</button>
-            </div>
-        </div>
+    <div class="verbs-head">
+      <h3>Zásobník aktivních sloves</h3>
+      <span class="count" id="verbCount"></span>
+      <input type="search" class="search" id="verbSearch" placeholder="Hledat sloveso…" aria-label="Hledat sloveso">
+    </div>
+    <div class="chips" id="chips"></div>
+    <p class="chips-empty" id="chipsEmpty">Žádné sloveso neodpovídá hledání.</p>
+    <p class="verbs-note">Tip: kliknutím na sloveso ho vložíte do skladače cíle níže — automaticky ve tvaru 3. osoby („žák porovná…“).</p>
+  </section>
 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Asset / Ticker</th>
-                        <th>Množství</th>
-                        <th>Prům. cena</th>
-                        <th>Celkem vloženo</th>
-                        <th>Akce</th>
-                    </tr>
-                </thead>
-                <tbody id="portfolioBody"></tbody>
-            </table>
-        </div>
-        <div style="margin-top:20px; font-weight:800; font-size:1.2rem;">
-            Celková hodnota vkladů: <span id="portfolioTotalValue">0</span>
-        </div>
+  <section class="builder" id="builder">
+    <h2>Skladač výukového cíle</h2>
+    <p class="sub">Dobrý cíl je formulovaný z pohledu žáka, obsahuje aktivní sloveso a je
+    ověřitelný. Osvědčená struktura: <strong>Žák + sloveso + obsah (učivo) + podmínky + kritérium úspěchu.</strong></p>
+
+    <div class="fields">
+      <div class="field">
+        <label for="fVerb">Sloveso</label>
+        <input id="fVerb" type="text" placeholder="např. porovná" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="fContent">Obsah / učivo</label>
+        <input id="fContent" type="text" placeholder="např. vlastnosti savců a plazů" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="fCondition">Podmínky <span class="opt">(volitelné)</span></label>
+        <input id="fCondition" type="text" placeholder="např. s pomocí atlasu, samostatně…" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="fCriterion">Kritérium <span class="opt">(volitelné)</span></label>
+        <input id="fCriterion" type="text" placeholder="např. alespoň ve třech znacích" autocomplete="off">
+      </div>
     </div>
 
-    <div id="page-history" class="page card">
-        <h2>Historický vývoj trhu (S&P 500)</h2>
-        <p>Interaktivní graf pro backtesting. Můžete zoomovat a měnit časová období (např. 1995-2024).</p>
-        <div id="tradingview_widget" style="height: 500px;"></div>
+    <div class="result" id="result"><span class="ph">Cíl se začne skládat, jakmile vyplníte sloveso a obsah…</span></div>
+
+    <div class="builder-actions">
+      <button class="btn btn-primary" id="copyBtn" type="button">Zkopírovat cíl</button>
+      <button class="btn btn-ghost" id="resetBtn" type="button">Vymazat</button>
     </div>
-</div>
+
+    <div class="checklist">
+      <h3>Rychlá kontrola cíle</h3>
+      <ul>
+        <li>Je formulovaný z pohledu žáka („žák…“), ne učitele („naučím…“).</li>
+        <li>Obsahuje aktivní, pozorovatelné sloveso (ne „zná“, „chápe“, „rozumí“).</li>
+        <li>Poznám na konci hodiny, zda byl splněn — je ověřitelný.</li>
+        <li>Odpovídá úrovni náročnosti, kterou jsem pro hodinu zvolil(a).</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <p>Vychází z revidované Bloomovy taxonomie kognitivních cílů (Anderson &amp; Krathwohl, 2001).
+  Úrovně na sebe navazují — vyšší úrovně předpokládají zvládnutí nižších.</p>
+  <p>Stránka funguje zcela offline jako jediný soubor HTML — vhodné pro zveřejnění přes GitHub Pages.</p>
+</footer>
+
+<div class="toast" id="toast" role="status">Cíl zkopírován do schránky ✓</div>
 
 <script>
-    let chart;
-    let portfolio = JSON.parse(localStorage.getItem('myInvestments')) || [];
+const LEVELS = [
+{
+  id:"l1",
+  name:"Zapamatovat",
+  en:"Remember · 1. úroveň",
+  question:"Klíčová otázka: Co si žák vybaví, rozpozná nebo zopakuje?",
+  does:[
+    "Vybavuje si fakta, pojmy, data, definice a pravidla.",
+    "Rozpoznává dříve naučené informace mezi jinými.",
+    "Reprodukuje učivo v podobě, v jaké je dostal — bez vlastního zpracování.",
+    "Vyhledává a nachází požadované informace ve známém zdroji.",
+    "Přiřazuje pojmy k sobě a sestavuje seznamy či výčty."
+  ],
+  examples:[
+    "Žák <b>vyjmenuje</b> kraje České republiky a <b>přiřadí</b> k nim krajská města.",
+    "Žák <b>definuje</b> pojem fotosyntéza vlastní reprodukcí naučené definice.",
+    "Žák <b>vyhledá</b> v textu tři klíčové údaje o bitvě na Bílé hoře."
+  ],
+  verbs:["definovat|definuje","popsat|popíše","pojmenovat|pojmenuje","vyjmenovat|vyjmenuje","uvést|uvede","identifikovat|identifikuje","rozpoznat|rozpozná","reprodukovat|reprodukuje","zopakovat|zopakuje","opakovat|opakuje","přiřadit|přiřadí","seřadit|seřadí","vybrat|vybere","doplnit|doplní","najít|najde","vyhledat|vyhledá","ukázat|ukáže","citovat|cituje","ocitovat|ocituje","určit|určí","zapsat|zapíše","vypsat|vypíše","vybavit si|vybaví si","označit|označí","podtrhnout|podtrhne","zvýraznit|zvýrazní","zaznamenat|zaznamená","spojit|spojí","lokalizovat|lokalizuje","recitovat|recituje","odříkat|odříká","memorovat|memoruje","jmenovat|jmenuje","sestavit seznam|sestaví seznam","vyplnit|vyplní","přepsat|přepíše","registrovat|registruje","evidovat|eviduje","znovu poznat|znovu pozná","deklamovat|deklamuje","zařadit do výčtu|zařadí do výčtu","konstatovat|konstatuje","zmínit|zmíní","napsat zpaměti|napíše zpaměti","vyznačit|vyznačí","uvést definici|uvede definici"]
+},
+{
+  id:"l2",
+  name:"Porozumět",
+  en:"Understand · 2. úroveň",
+  question:"Klíčová otázka: Dokáže žák vysvětlit myšlenku vlastními slovy?",
+  does:[
+    "Vysvětluje učivo vlastními slovy a vlastními příklady.",
+    "Interpretuje texty, grafy, tabulky, obrázky či symboly.",
+    "Shrnuje hlavní myšlenky a převádí je do jiné podoby.",
+    "Třídí a klasifikuje jevy podle pochopených znaků.",
+    "Odhaduje a předpovídá, co bude následovat, na základě porozumění."
+  ],
+  examples:[
+    "Žák <b>vysvětlí</b> vlastními slovy, proč se střídají roční období.",
+    "Žák <b>shrne</b> hlavní myšlenku přečteného článku ve třech větách.",
+    "Žák <b>interpretuje</b> graf vývoje teplot a <b>vyvodí</b> z něj jednoduchý závěr."
+  ],
+  verbs:["vysvětlit|vysvětlí","objasnit|objasní","interpretovat|interpretuje","parafrázovat|parafrázuje","shrnout|shrne","vyjádřit vlastními slovy|vyjádří vlastními slovy","převést|převede","přeložit|přeloží","ilustrovat|ilustruje","uvést příklad|uvede příklad","doložit|doloží","dovodit|dovodí","vyvodit|vyvodí","odhadnout|odhadne","předpovědět|předpoví","klasifikovat|klasifikuje","zařadit|zařadí","roztřídit|roztřídí","zobecnit|zobecní","přeformulovat|přeformuluje","rozlišit|rozliší","charakterizovat|charakterizuje","konkretizovat|konkretizuje","popsat vztah|popíše vztah","porovnat na příkladu|porovná na příkladu","přirovnat|přirovná","dokumentovat|dokumentuje","komentovat|komentuje","vystihnout|vystihne","upřesnit|upřesní","přiblížit|přiblíží","demonstrovat na příkladu|demonstruje na příkladu","odlišit|odliší","usuzovat|usuzuje","extrapolovat|extrapoluje","převyprávět|převypráví","zjednodušit|zjednoduší","znázornit|znázorní","schematizovat|schematizuje","vyložit|vyloží","dekódovat|dekóduje","rozvést|rozvede","naznačit důsledky|naznačí důsledky","objasnit smysl|objasní smysl","vysvětlit příčinu|vysvětlí příčinu","popsat průběh|popíše průběh"]
+},
+{
+  id:"l3",
+  name:"Aplikovat",
+  en:"Apply · 3. úroveň",
+  question:"Klíčová otázka: Použije žák naučené v nové, konkrétní situaci?",
+  does:[
+    "Používá pravidla, postupy, vzorce a metody v nových situacích.",
+    "Řeší úlohy a praktické problémy pomocí osvojeného postupu.",
+    "Předvádí a demonstruje dovednost v praxi.",
+    "Provádí měření, výpočty, konstrukce a experimenty podle postupu.",
+    "Přizpůsobuje známý postup mírně odlišným podmínkám."
+  ],
+  examples:[
+    "Žák <b>vypočítá</b> obsah složeného obrazce s využitím vzorců pro obdélník a trojúhelník.",
+    "Žák <b>aplikuje</b> pravidlo shody přísudku s podmětem při psaní vlastního textu.",
+    "Žák <b>provede</b> jednoduchý pokus podle návodu a <b>zaznamená</b> jeho výsledky."
+  ],
+  verbs:["použít|použije","aplikovat|aplikuje","uplatnit|uplatní","řešit|řeší","vyřešit|vyřeší","vypočítat|vypočítá","spočítat|spočítá","demonstrovat|demonstruje","předvést|předvede","vyzkoušet|vyzkouší","ověřit v praxi|ověří v praxi","realizovat|realizuje","implementovat|implementuje","provést|provede","sestrojit|sestrojí","sestavit podle návodu|sestaví podle návodu","nakreslit|nakreslí","narýsovat|narýsuje","změřit|změří","vyměřit|vyměří","upravit|upraví","přizpůsobit|přizpůsobí","dramatizovat|dramatizuje","modelovat podle vzoru|modeluje podle vzoru","simulovat|simuluje","napodobit postup|napodobí postup","vyplnit formulář|vyplní formulář","uspořádat|uspořádá","zorganizovat|zorganizuje","naplánovat postup|naplánuje postup","zpracovat|zpracuje","vyhotovit|vyhotoví","obsluhovat|obsluhuje","manipulovat|manipuluje","zacházet|zachází","procvičit|procvičí","trénovat|trénuje","dokončit|dokončí","převést do praxe|převede do praxe","využít|využije","zhotovit|zhotoví","kalkulovat|kalkuluje","experimentovat|experimentuje","prakticky ukázat|prakticky ukáže","zaznamenat data|zaznamená data","dosadit|dosadí","vyhledat podle klíče|vyhledá podle klíče"]
+},
+{
+  id:"l4",
+  name:"Analyzovat",
+  en:"Analyze · 4. úroveň",
+  question:"Klíčová otázka: Rozloží žák celek na části a najde mezi nimi vztahy?",
+  does:[
+    "Rozkládá celek (text, jev, problém) na části a popisuje jejich vztahy.",
+    "Porovnává a hledá shody, rozdíly, příčiny a důsledky.",
+    "Rozlišuje podstatné od nepodstatného, fakta od názorů.",
+    "Odhaluje skryté předpoklady, záměry, chyby a vzorce.",
+    "Strukturuje informace, mapuje souvislosti a vyvozuje závěry."
+  ],
+  examples:[
+    "Žák <b>porovná</b> dva novinové články o téže události a <b>rozliší</b> fakta od názorů autora.",
+    "Žák <b>analyzuje</b> stavbu básně a <b>identifikuje</b> použité básnické prostředky.",
+    "Žák <b>rozčlení</b> ekosystém rybníka na složky a <b>popíše vztahy</b> mezi nimi."
+  ],
+  verbs:["analyzovat|analyzuje","rozebrat|rozebere","rozčlenit|rozčlení","rozložit|rozloží","rozlišit|rozliší","porovnat|porovná","srovnat|srovná","najít rozdíly|najde rozdíly","najít shody|najde shody","identifikovat příčiny|identifikuje příčiny","identifikovat důsledky|identifikuje důsledky","kategorizovat|kategorizuje","třídit|třídí","klasifikovat podle kritérií|klasifikuje podle kritérií","zkoumat|zkoumá","prozkoumat|prozkoumá","prošetřit|prošetří","testovat|testuje","dedukovat|dedukuje","odvodit|odvodí","vyvodit závěry|vyvodí závěry","najít souvislosti|najde souvislosti","strukturovat|strukturuje","dekonstruovat|dekonstruuje","diagnostikovat|diagnostikuje","vyčlenit|vyčlení","izolovat|izoluje","konfrontovat|konfrontuje","specifikovat|specifikuje","rozpoznat vzorce|rozpozná vzorce","rozpoznat předpoklady|rozpozná předpoklady","odhalit chyby|odhalí chyby","odhalit záměr|odhalí záměr","rozlišit fakta od názorů|rozliší fakta od názorů","určit hlavní myšlenku|určí hlavní myšlenku","vymezit|vymezí","členit|člení","mapovat|mapuje","zpochybnit předpoklady|zpochybní předpoklady","ověřit logiku|ověří logiku","seskupit|seskupí","uspořádat podle vztahů|uspořádá podle vztahů","odlišit podstatné od nepodstatného|odliší podstatné od nepodstatného","rozkrýt strukturu|rozkryje strukturu","stanovit vztahy|stanoví vztahy"]
+},
+{
+  id:"l5",
+  name:"Hodnotit",
+  en:"Evaluate · 5. úroveň",
+  question:"Klíčová otázka: Posoudí žák hodnotu, kvalitu či správnost podle kritérií?",
+  does:[
+    "Posuzuje informace, řešení a výtvory podle stanovených kritérií.",
+    "Formuluje a obhajuje vlastní stanovisko pomocí argumentů.",
+    "Kriticky prověřuje spolehlivost zdrojů a správnost postupů.",
+    "Rozhoduje mezi variantami a svou volbu zdůvodňuje.",
+    "Reflektuje vlastní práci i práci druhých a navrhuje, co zlepšit."
+  ],
+  examples:[
+    "Žák <b>posoudí</b> spolehlivost tří internetových zdrojů podle zadaných kritérií a své hodnocení <b>zdůvodní</b>.",
+    "Žák <b>zaujme stanovisko</b> k výstavbě obchvatu města a <b>obhájí</b> ho alespoň třemi argumenty.",
+    "Žák <b>vyhodnotí</b> výsledky pokusu a <b>rozhodne</b>, zda potvrzují hypotézu."
+  ],
+  verbs:["hodnotit|hodnotí","zhodnotit|zhodnotí","posoudit|posoudí","kriticky posoudit|kriticky posoudí","recenzovat|recenzuje","obhájit|obhájí","argumentovat|argumentuje","oponovat|oponuje","zdůvodnit|zdůvodní","odůvodnit|odůvodní","ověřit|ověří","prověřit|prověří","doporučit|doporučí","rozhodnout|rozhodne","zvolit a zdůvodnit|zvolí a zdůvodní","ocenit|ocení","zvážit|zváží","vyvážit argumenty|vyváží argumenty","porovnat podle kritérií|porovná podle kritérií","stanovit kritéria|stanoví kritéria","oznámkovat|oznámkuje","validovat|validuje","vyvrátit|vyvrátí","podpořit důkazy|podpoří důkazy","přesvědčit|přesvědčí","předpovědět důsledky|předpoví důsledky","zaujmout stanovisko|zaujme stanovisko","formulovat názor|formuluje názor","prioritizovat|prioritizuje","seřadit podle významu|seřadí podle významu","rozsoudit|rozsoudí","posoudit kvalitu|posoudí kvalitu","posoudit spolehlivost|posoudí spolehlivost","odhadnout hodnotu|odhadne hodnotu","kriticky interpretovat výsledky|kriticky interpretuje výsledky","vyhodnotit data|vyhodnotí data","kriticky komentovat|kriticky komentuje","reflektovat|reflektuje","provést sebehodnocení|provede sebehodnocení","revidovat závěry|reviduje závěry","prokázat|prokáže","zpochybnit|zpochybní","uzavřít|uzavře","obodovat|oboduje","vyjádřit souhlas či nesouhlas|vyjádří souhlas či nesouhlas"]
+},
+{
+  id:"l6",
+  name:"Tvořit",
+  en:"Create · 6. úroveň",
+  question:"Klíčová otázka: Vytvoří žák něco nového, vlastního a původního?",
+  does:[
+    "Skládá známé prvky do nového, původního celku.",
+    "Navrhuje vlastní řešení, postupy, produkty a projekty.",
+    "Formuluje hypotézy a plánuje, jak je ověřit.",
+    "Kombinuje poznatky z různých oblastí do jednoho výstupu.",
+    "Zlepšuje, přetváří a inovuje existující řešení."
+  ],
+  examples:[
+    "Žák <b>navrhne</b> vlastní experiment, kterým ověří vliv světla na růst rostlin.",
+    "Žák <b>vytvoří</b> komiks převyprávějící pověst o Libuši pro mladší spolužáky.",
+    "Žák <b>zformuluje hypotézu</b> a <b>naplánuje</b> postup jejího ověření včetně potřebných pomůcek."
+  ],
+  verbs:["vytvořit|vytvoří","tvořit|tvoří","navrhnout|navrhne","sestavit|sestaví","zkomponovat|zkomponuje","komponovat|komponuje","formulovat|formuluje","zformulovat hypotézu|zformuluje hypotézu","vymyslet|vymyslí","naplánovat|naplánuje","zkonstruovat|zkonstruuje","konstruovat|konstruuje","vyvinout|vyvine","generovat|generuje","inovovat|inovuje","kombinovat|kombinuje","integrovat|integruje","syntetizovat|syntetizuje","napsat|napíše","sepsat|sepíše","složit|složí","nově zorganizovat|nově zorganizuje","produkovat|produkuje","vyrobit|vyrobí","adaptovat|adaptuje","přetvořit|přetvoří","přepracovat|přepracuje","modelovat|modeluje","vynalézt|vynalezne","založit|založí","iniciovat|iniciuje","zinscenovat|zinscenuje","režírovat|režíruje","naprogramovat|naprogramuje","zrekonstruovat|zrekonstruuje","zdokonalit|zdokonalí","optimalizovat|optimalizuje","rozvinout|rozvine","zpracovat projekt|zpracuje projekt","připravit návrh|připraví návrh","vybudovat|vybuduje","zhotovit originál|zhotoví originál","improvizovat|improvizuje","aranžovat|aranžuje","koncipovat|koncipuje","navrhnout alternativu|navrhne alternativu"]
+}
+];
 
-    // --- NAVIGACE ---
-    function showPage(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
-        document.getElementById('page-' + pageId).classList.add('active');
-        document.getElementById('link-' + pageId).classList.add('active');
+const stairs = document.getElementById('stairs');
+const chipsEl = document.getElementById('chips');
+const chipsEmpty = document.getElementById('chipsEmpty');
+const searchEl = document.getElementById('verbSearch');
+let current = 0;
+let selectedVerb = null;
 
-        if(pageId === 'history') loadTradingView();
-        if(pageId === 'portfolio') renderPortfolio();
-    }
+/* schodiště */
+LEVELS.forEach((lv,i)=>{
+  const b = document.createElement('button');
+  b.className = 'step';
+  b.setAttribute('role','tab');
+  b.setAttribute('aria-selected', i===0 ? 'true':'false');
+  b.innerHTML = `<span class="num">${i+1}</span><span class="name">${lv.name}</span><span class="hint">${lv.en.split(' ·')[0]}</span>`;
+  b.addEventListener('click',()=>selectLevel(i));
+  stairs.appendChild(b);
+});
 
-    // --- KALKULAČKA ---
-    function calculate() {
-        const curr = document.getElementById('currency').value;
-        const initial = parseFloat(document.getElementById('initialDeposit').value) || 0;
-        let monthly = parseFloat(document.getElementById('monthlyStep').value) || 0;
-        const years = parseInt(document.getElementById('years').value) || 1;
-        const rate = (parseFloat(document.getElementById('rate').value) / 100) || 0;
-        const inflation = (parseFloat(document.getElementById('inflation').value) / 100) || 0;
-        const compoundFreq = parseInt(document.getElementById('compounding').value);
-        const incY = parseInt(document.getElementById('incYears').value) || 0;
-        const incA = parseFloat(document.getElementById('incAmount').value) || 0;
+function selectLevel(i){
+  current = i;
+  selectedVerb = null;
+  const lv = LEVELS[i];
+  document.documentElement.style.setProperty('--accent', `var(--${lv.id})`);
+  document.documentElement.style.setProperty('--accent-soft', `var(--${lv.id}-soft)`);
+  [...stairs.children].forEach((s,j)=>{
+    s.classList.toggle('active', j===i);
+    s.setAttribute('aria-selected', j===i ? 'true':'false');
+  });
+  document.getElementById('levelName').textContent = lv.name;
+  document.getElementById('levelEn').textContent = lv.en;
+  document.getElementById('levelQuestion').textContent = lv.question;
+  document.getElementById('levelDoes').innerHTML = lv.does.map(d=>`<li>${d}</li>`).join('');
+  document.getElementById('levelExamples').innerHTML = lv.examples.map(e=>`<blockquote>${e}</blockquote>`).join('');
+  document.getElementById('verbCount').textContent = `${lv.verbs.length} sloves`;
+  searchEl.value = '';
+  renderChips();
+}
 
-        let total = initial;
-        let totalDeps = initial;
-        let labels = [0], dataT = [initial], dataD = [initial];
+function renderChips(){
+  const q = searchEl.value.trim().toLowerCase();
+  const verbs = LEVELS[current].verbs.filter(v=>v.toLowerCase().includes(q));
+  chipsEl.innerHTML = '';
+  verbs.forEach(v=>{
+    const [inf, third] = v.split('|');
+    const c = document.createElement('button');
+    c.type = 'button';
+    c.className = 'chip' + (v===selectedVerb ? ' selected':'');
+    c.textContent = inf;
+    c.title = 'Vloží do cíle: žák ' + third + ' …';
+    c.addEventListener('click',()=>pickVerb(v, third));
+    chipsEl.appendChild(c);
+  });
+  chipsEmpty.style.display = verbs.length ? 'none':'block';
+}
 
-        for (let m = 1; m <= years * 12; m++) {
-            if (incY > 0 && m > 1 && (m - 1) % (incY * 12) === 0) monthly += incA;
-            
-            total += monthly;
-            totalDeps += monthly;
+searchEl.addEventListener('input', renderChips);
 
-            if (m % (12 / compoundFreq) === 0) {
-                total += (total - (monthly / 2)) * (rate / compoundFreq);
-            }
+/* skladač */
+const fVerb = document.getElementById('fVerb');
+const fContent = document.getElementById('fContent');
+const fCondition = document.getElementById('fCondition');
+const fCriterion = document.getElementById('fCriterion');
+const result = document.getElementById('result');
 
-            if (m % 12 === 0) {
-                labels.push(m / 12);
-                dataT.push(Math.round(total));
-                dataD.push(Math.round(totalDeps));
-            }
-        }
+function pickVerb(v, third){
+  selectedVerb = v;
+  fVerb.value = third;
+  renderChips();
+  buildGoal();
+  document.getElementById('builder').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
 
-        const realVal = total / Math.pow(1 + inflation, years);
+function buildGoal(){
+  const verb = fVerb.value.trim();
+  const content = fContent.value.trim();
+  const cond = fCondition.value.trim();
+  const crit = fCriterion.value.trim();
+  if(!verb && !content){
+    result.innerHTML = '<span class="ph">Cíl se začne skládat, jakmile vyplníte sloveso a obsah…</span>';
+    return;
+  }
+  let s = 'Žák';
+  if(verb) s += ' ' + verb;
+  if(content) s += ' ' + content;
+  if(cond) s += ' ' + cond;
+  if(crit) s += ', ' + crit;
+  s = s.replace(/\s+/g,' ').trim();
+  if(!/[.!?]$/.test(s)) s += '.';
+  result.textContent = s;
+}
 
-        document.getElementById('resTotal').innerText = Math.round(total).toLocaleString() + ' ' + curr;
-        document.getElementById('resDeposits').innerText = Math.round(totalDeps).toLocaleString() + ' ' + curr;
-        document.getElementById('resReal').innerText = Math.round(realVal).toLocaleString() + ' ' + curr;
+[fVerb,fContent,fCondition,fCriterion].forEach(el=>el.addEventListener('input', buildGoal));
 
-        updateChart(labels, dataT, dataD, curr);
-    }
+document.getElementById('copyBtn').addEventListener('click', async ()=>{
+  const text = result.textContent;
+  if(text.startsWith('Cíl se začne')) return;
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); ta.remove();
+  }
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'), 2200);
+});
 
-    function updateChart(labels, dataT, dataD, curr) {
-        const ctx = document.getElementById('mainChart').getContext('2d');
-        if (chart) chart.destroy();
-        chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    { label: 'Budoucí hodnota', data: dataT, borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, 0.1)', fill: true, tension: 0.3 },
-                    { label: 'Vklady', data: dataD, borderColor: '#94a3b8', borderDash: [5, 5], fill: false }
-                ]
-            },
-            options: { 
-                responsive: true, maintainAspectRatio: false,
-                scales: { y: { ticks: { callback: v => v.toLocaleString() + ' ' + curr } } }
-            }
-        });
-    }
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  [fVerb,fContent,fCondition,fCriterion].forEach(el=>el.value='');
+  selectedVerb = null;
+  renderChips();
+  buildGoal();
+});
 
-    // --- PORTFOLIO ---
-    function addAsset() {
-        const ticker = document.getElementById('pTicker').value;
-        const shares = parseFloat(document.getElementById('pShares').value);
-        const price = parseFloat(document.getElementById('pPrice').value);
-        if(!ticker || !shares || !price) return;
-
-        portfolio.push({ ticker, shares, price });
-        localStorage.setItem('myInvestments', JSON.stringify(portfolio));
-        renderPortfolio();
-        document.getElementById('pTicker').value = '';
-    }
-
-    function renderPortfolio() {
-        const body = document.getElementById('portfolioBody');
-        const curr = document.getElementById('currency').value;
-        body.innerHTML = '';
-        let total = 0;
-
-        portfolio.forEach((item, i) => {
-            const sum = item.shares * item.price;
-            total += sum;
-            body.innerHTML += `<tr>
-                <td><strong>${item.ticker}</strong></td>
-                <td>${item.shares}</td>
-                <td>${item.price.toLocaleString()} ${curr}</td>
-                <td>${sum.toLocaleString()} ${curr}</td>
-                <td><span class="del-btn" onclick="removeAsset(${i})">Smazat</span></td>
-            </tr>`;
-        });
-        document.getElementById('portfolioTotalValue').innerText = total.toLocaleString() + ' ' + curr;
-    }
-
-    function removeAsset(i) {
-        portfolio.splice(i, 1);
-        localStorage.setItem('myInvestments', JSON.stringify(portfolio));
-        renderPortfolio();
-    }
-
-    // --- TRADINGVIEW & PDF ---
-    function loadTradingView() {
-        new TradingView.widget({
-            "autosize": true, "symbol": "SPX", "interval": "D", "timezone": "Etc/UTC",
-            "theme": "light", "style": "2", "locale": "cs", "container_id": "tradingview_widget"
-        });
-    }
-
-    function exportPDF() {
-        const element = document.getElementById('pdf-area');
-        html2pdf().from(element).set({
-            margin: 10, filename: 'investicni-plan.pdf', html2canvas: { scale: 2 }, jsPDF: { orientation: 'landscape' }
-        }).save();
-    }
-
-    // Start
-    calculate();
+selectLevel(0);
 </script>
 </body>
 </html>
