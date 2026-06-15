@@ -21,6 +21,10 @@
   --l4:#C9931F; --l4-soft:#F8F0DB;
   --l5:#CC6B3A; --l5-soft:#F9EAE1;
   --l6:#B5486F; --l6-soft:#F7E5EC;
+  --dim1:#4C6B8A; --dim1-soft:#EAEFF4;
+  --dim2:#3E8A7A; --dim2-soft:#E6F1EE;
+  --dim3:#A8743A; --dim3-soft:#F6EEE2;
+  --dim4:#7A5A9B; --dim4-soft:#F0EBF6;
   --accent:var(--l1);
   --accent-soft:var(--l1-soft);
   --radius:14px;
@@ -222,9 +226,80 @@ h3{
 .goal-ovu{margin-top:16px;padding-top:14px;border-top:1px dashed #5A6052;
   display:flex;flex-direction:column;gap:5px;
   font-family:'Google Sans Flex',sans-serif;font-weight:400;letter-spacing:0}
+.goal-dim{margin-top:16px;padding-top:14px;border-top:1px dashed #5A6052;
+  display:flex;flex-direction:column;gap:4px;
+  font-family:'Google Sans Flex',sans-serif;font-weight:400;letter-spacing:0}
+.goal-dim-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.goal-dim-val{font-size:15px;font-weight:600;color:#E7E9E0}
 .goal-ovu-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
 .goal-ovu-code{font-size:14px;font-weight:600;color:#E7E9E0}
 .goal-ovu-text{font-size:14px;color:#C3C7BA;line-height:1.5}
+/* ---------- dimenze poznání ---------- */
+.dims{margin-top:46px}
+.dims-head h2{
+  font-family:'Google Sans Flex',sans-serif;font-weight:700;
+  font-size:clamp(24px,3.6vw,34px);letter-spacing:-.04em;margin-top:2px;
+}
+.dims-lede{margin-top:12px;max-width:74ch;color:var(--ink-soft);font-size:16px}
+.dims-lede+.dims-lede{margin-top:10px}
+.dims-lede em{font-style:italic}
+.dims-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:24px}
+.dim-card{
+  background:var(--card);border:1px solid var(--line);
+  border-left:5px solid var(--d);border-radius:var(--radius);
+  padding:22px 24px;position:relative;
+}
+.dim-badge{
+  position:absolute;top:20px;right:20px;width:32px;height:32px;border-radius:9px;
+  background:var(--ds);color:var(--d);display:flex;align-items:center;justify-content:center;
+  font-family:'Google Sans Flex',sans-serif;font-weight:700;font-size:16px;
+}
+.dim-card h3{
+  font-family:'Google Sans Flex',sans-serif;font-weight:700;font-size:19px;
+  letter-spacing:-.02em;color:var(--d);text-transform:none;margin-bottom:10px;
+  padding-right:44px;line-height:1.2;
+}
+.dim-card h3 .en{
+  display:block;font-size:12px;font-weight:500;color:var(--ink-soft);
+  letter-spacing:.04em;margin-top:3px;
+}
+.dim-def{font-size:15px;margin-bottom:14px;max-width:78ch}
+.dim-def em{font-style:italic}
+.dim-h{
+  font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--d);margin:0 0 7px;
+}
+.dim-list{list-style:none;display:grid;gap:8px;margin:0 0 4px}
+.dim-list.tight{gap:5px}
+.dim-list li{position:relative;padding-left:18px;font-size:14.5px;line-height:1.5}
+.dim-list li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;border-radius:2px;background:var(--d)}
+.dim-list b{font-weight:600}
+.dim-list .ex{color:var(--ink-soft);font-style:italic}
+.dim-list em{font-style:italic}
+.dim-more{margin-top:14px;border-top:1px solid var(--line);padding-top:6px}
+.dim-more summary{
+  cursor:pointer;list-style:none;font-size:13.5px;font-weight:600;color:var(--d);
+  padding:8px 0;display:flex;align-items:center;gap:8px;
+}
+.dim-more summary::-webkit-details-marker{display:none}
+.dim-more summary::before{content:"+";font-size:17px;line-height:1;font-weight:700}
+.dim-more[open] summary::before{content:"–"}
+.dim-more summary:focus-visible{outline:2px solid var(--d);outline-offset:3px;border-radius:4px}
+.dim-more-body{padding:4px 0 6px}
+.dim-more-body .dim-h{margin-top:14px}
+.dim-more-body .dim-h:first-child{margin-top:4px}
+.dim-flow{font-size:14px;color:var(--ink);margin:0}
+.dim-goal{
+  font-size:14.5px;font-style:italic;background:var(--ds);color:var(--ink);
+  border-radius:8px;padding:9px 12px;margin:0;
+}
+.dim-warn{
+  font-size:13.5px;line-height:1.5;color:var(--ink-soft);
+  margin:14px 0 0;padding-left:14px;border-left:3px solid var(--d);
+}
+.dim-warn b{color:var(--ink);font-weight:600}
+.dim-warn em{font-style:italic}
+
 .builder-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
 .rvp{margin-top:26px;border-top:1px solid #4A5043;padding-top:22px}
 .rvp-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
@@ -237,6 +312,15 @@ h3{
 .rvp-link:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .rvp-note{color:#9CA193;font-size:13px;margin:8px 0 4px;max-width:70ch}
 .rvp-fields{margin-top:16px}
+.dim-field{margin-top:16px;max-width:480px}
+.dim-field select{
+  width:100%;font:inherit;font-size:15px;
+  background:#31372C;border:1px solid #4A5043;border-radius:10px;
+  color:#F2F3EE;padding:11px 13px;appearance:none;cursor:pointer;padding-right:34px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23B9BDB2' stroke-width='1.6'/></svg>");
+  background-repeat:no-repeat;background-position:right 13px center;
+}
+.dim-field select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .rvp-wide{grid-column:1 / -1}
 .rvp-fields .field input{background:#2A2F26}
 .rvp-picker{margin-top:16px;display:grid;gap:14px}
@@ -328,6 +412,131 @@ footer a{color:inherit}
     <p class="verbs-note">Tip: kliknutím na sloveso ho vložíte do skladače cíle níže — automaticky ve tvaru 3. osoby („žák porovná…“).</p>
   </section>
 
+  <section class="dims">
+    <div class="dims-head">
+      <p class="eyebrow">Druhá osa taxonomie</p>
+      <h2>Dimenze poznání</h2>
+      <p class="dims-lede">Revidovaná Bloomova taxonomie pracuje se dvěma osami. <strong>Sloveso</strong> (úrovně výše) říká,
+      <em>jak</em> žák s poznatkem zachází. <strong>Dimenze poznání</strong> říká, <em>s jakým druhem</em> poznatku pracuje.
+      Teprve jejich spojení tvoří úplný cíl — to je podstata tzv. tabulky taxonomie.</p>
+      <p class="dims-lede">Dimenze tvoří škálu <strong>od konkrétního k abstraktnímu</strong> (A → D) a každá z nich se může pojit s kteroukoli ze šesti úrovní.
+      Důležité je, že <strong>totéž téma může spadat do různých dimenzí</strong> podle toho, co po žákovi chcete: jiný cíl je „znát vzorec", jiný „chápat, proč platí", a jiný „umět podle něj počítat".
+      U každé dimenze proto najdete i vodítka, jak ji rozpoznat, a upozornění na časté záměny.</p>
+    </div>
+    <div class="dims-grid">
+      <article class="dim-card" style="--d:var(--dim1);--ds:var(--dim1-soft)">
+        <div class="dim-badge">A</div>
+        <h3>Faktické poznatky <span class="en">Factual knowledge</span></h3>
+        <p class="dim-def">Nejzákladnější „stavební kameny" oboru — jednotlivé informace, které dávají smysl samy o sobě a které si žák potřebuje
+        zapamatovat, aby se v oboru vůbec vyznal a mohl řešit úlohy. Jsou konkrétní a izolované, nevyžadují pochopení vztahů mezi nimi.</p>
+        <p class="dim-h">Podtypy</p>
+        <ul class="dim-list">
+          <li><b>Znalost terminologie</b> — odborné názvy, značky, symboly, zkratky. <span class="ex">Např. pojem fotosyntéza, značka Fe, pojem přísudek.</span></li>
+          <li><b>Znalost konkrétních faktů a detailů</b> — data, jména, místa, údaje, zdroje informací. <span class="ex">Např. rok 1918, výška Sněžky, kde údaj najdu v učebnici.</span></li>
+        </ul>
+        <details class="dim-more">
+          <summary>Jak ji poznat a používat</summary>
+          <div class="dim-more-body">
+            <p class="dim-h">Ptám se sám sebe</p>
+            <ul class="dim-list tight">
+              <li>Jde o jednotlivý údaj, který se dá „vědět zpaměti" bez vysvětlování?</li>
+              <li>Dá se ověřit jako správně/špatně bez argumentace?</li>
+            </ul>
+            <p class="dim-h">Typická slovesa a činnosti</p>
+            <p class="dim-flow">vyjmenovat · pojmenovat · označit · přiřadit · doplnit · reprodukovat definici</p>
+            <p class="dim-h">Příklad cíle</p>
+            <p class="dim-goal">Žák vyjmenuje státy sousedící s Českou republikou.</p>
+            <p class="dim-warn"><b>Pozor na záměnu:</b> jakmile musí žák fakta dát do vztahu, zařadit do systému nebo vysvětlit „proč", nejde už o faktické, ale o konceptuální poznatky.</p>
+          </div>
+        </details>
+      </article>
+
+      <article class="dim-card" style="--d:var(--dim2);--ds:var(--dim2-soft)">
+        <div class="dim-badge">B</div>
+        <h3>Konceptuální (pojmové) poznatky <span class="en">Conceptual knowledge</span></h3>
+        <p class="dim-def">Vztahy a souvislosti mezi jednotlivými fakty — to, co z izolovaných informací dělá smysluplný systém. Patří sem kategorie,
+        principy, zákonitosti, teorie a modely, podle nichž obor funguje. Žák tu nejen <em>ví</em>, ale <em>rozumí</em>, jak věci souvisejí.</p>
+        <p class="dim-h">Podtypy</p>
+        <ul class="dim-list">
+          <li><b>Klasifikace a kategorie</b> — jak se jevy třídí. <span class="ex">Např. dělení slovních druhů, třídění organismů do říší.</span></li>
+          <li><b>Principy a zobecnění</b> — pravidla a zákonitosti platící obecně. <span class="ex">Např. shoda přísudku s podmětem, zákon zachování energie.</span></li>
+          <li><b>Teorie, modely a struktury</b> — ucelené systémy vysvětlující jevy. <span class="ex">Např. model atomu, koloběh vody, desková tektonika.</span></li>
+        </ul>
+        <details class="dim-more">
+          <summary>Jak ji poznat a používat</summary>
+          <div class="dim-more-body">
+            <p class="dim-h">Ptám se sám sebe</p>
+            <ul class="dim-list tight">
+              <li>Musí žák chápat vztah „jak souvisí A s B" nebo „proč to tak je"?</li>
+              <li>Pracuje s tříděním, pravidlem, modelem či systémem — ne s jedním údajem?</li>
+            </ul>
+            <p class="dim-h">Typická slovesa a činnosti</p>
+            <p class="dim-flow">roztřídit · vysvětlit vztah · zařadit do systému · porovnat podle znaků · odvodit z principu</p>
+            <p class="dim-h">Příklad cíle</p>
+            <p class="dim-goal">Žák roztřídí obratlovce do tříd podle jejich společných znaků.</p>
+            <p class="dim-warn"><b>Pozor na záměnu:</b> zná-li žák jen <em>název</em> kategorie, je to faktický poznatek; teprve když chápe, <em>podle čeho</em> do ní jevy patří, jde o konceptuální poznatek.</p>
+          </div>
+        </details>
+      </article>
+
+      <article class="dim-card" style="--d:var(--dim3);--ds:var(--dim3-soft)">
+        <div class="dim-badge">C</div>
+        <h3>Procedurální poznatky <span class="en">Procedural knowledge</span></h3>
+        <p class="dim-def">„Vědět jak" — postupy, metody, algoritmy a techniky, které žák provádí krok za krokem, a navíc povědomí o tom,
+        <em>kdy</em> je vhodné který postup použít. Klíčové je, že žák něco aktivně <em>dělá</em> podle daného nebo voleného postupu.</p>
+        <p class="dim-h">Podtypy</p>
+        <ul class="dim-list">
+          <li><b>Oborové dovednosti a algoritmy</b> — pevné postupy s jasnými kroky. <span class="ex">Např. písemné dělení, řešení lineární rovnice, měření délky.</span></li>
+          <li><b>Oborové techniky a metody</b> — volnější postupy s více možnými cestami. <span class="ex">Např. badatelský pokus, technika akvarelu, práce s historickým pramenem.</span></li>
+          <li><b>Kritéria pro volbu postupu</b> — vědět, který postup je v dané situaci vhodný. <span class="ex">Např. kdy počítám obvod a kdy obsah.</span></li>
+        </ul>
+        <details class="dim-more">
+          <summary>Jak ji poznat a používat</summary>
+          <div class="dim-more-body">
+            <p class="dim-h">Ptám se sám sebe</p>
+            <ul class="dim-list tight">
+              <li>Provádí žák nějaký postup — něco „dělá" podle kroků?</li>
+              <li>Dalo by se to popsat jako „návod, jak na to"?</li>
+            </ul>
+            <p class="dim-h">Typická slovesa a činnosti</p>
+            <p class="dim-flow">vypočítat postupem · sestrojit · změřit · provést pokus · zhotovit · postupovat podle</p>
+            <p class="dim-h">Příklad cíle</p>
+            <p class="dim-goal">Žák vypočítá obsah obdélníku podle vzorce.</p>
+            <p class="dim-warn"><b>Pozor — totéž téma, tři dimenze:</b> znát vzorec zpaměti = faktické; chápat, proč vzorec platí = konceptuální; umět podle něj počítat = procedurální.</p>
+          </div>
+        </details>
+      </article>
+
+      <article class="dim-card" style="--d:var(--dim4);--ds:var(--dim4-soft)">
+        <div class="dim-badge">D</div>
+        <h3>Metakognitivní poznatky <span class="en">Metacognitive knowledge</span></h3>
+        <p class="dim-def">Poznatky o samotném poznávání a učení — to, co žák ví o tom, jak se učí, jak myslí a jak řeší úlohy, včetně znalosti
+        sebe sama jako toho, kdo se učí. Tato dimenze rozvíjí samostatnost a odpovědnost za vlastní učení a úzce souvisí s klíčovou kompetencí k učení v RVP.</p>
+        <p class="dim-h">Podtypy</p>
+        <ul class="dim-list">
+          <li><b>Strategické poznatky</b> — obecné strategie učení, myšlení a řešení problémů. <span class="ex">Např. shrnout si text vlastními slovy, rozdělit velkou úlohu na menší.</span></li>
+          <li><b>Poznatky o kognitivních úlohách</b> — vědět, čím je která úloha náročná a co vyžaduje. <span class="ex">Např. rozpoznat, kdy textu nerozumím.</span></li>
+          <li><b>Sebepoznání</b> — povědomí o vlastních silných a slabých stránkách a motivaci. <span class="ex">Např. vím, že si lépe pamatuji obrázky než text.</span></li>
+        </ul>
+        <details class="dim-more">
+          <summary>Jak ji poznat a používat</summary>
+          <div class="dim-more-body">
+            <p class="dim-h">Ptám se sám sebe</p>
+            <ul class="dim-list tight">
+              <li>Týká se to toho, <em>jak</em> se žák učí a přemýšlí — ne učiva samotného?</li>
+              <li>Žák sám sebe reflektuje, plánuje, hodnotí nebo řídí své učení?</li>
+            </ul>
+            <p class="dim-h">Typická slovesa a činnosti</p>
+            <p class="dim-flow">naplánovat si postup · zvolit strategii · reflektovat · zhodnotit vlastní práci · provést sebehodnocení</p>
+            <p class="dim-h">Příklad cíle</p>
+            <p class="dim-goal">Žák zvolí a zdůvodní strategii, kterou se naučí novou slovní zásobu.</p>
+            <p class="dim-warn"><b>Pozor na záměnu:</b> metakognice není o obsahu předmětu, ale o učení a myšlení žáka. Bývá nejčastěji opomíjená — přitom je to ona, kdo dělá ze žáka samostatného „strůjce" vlastního učení.</p>
+          </div>
+        </details>
+      </article>
+    </div>
+  </section>
+
   <section class="builder" id="builder">
     <h2>Skladač výukového cíle</h2>
     <p class="sub">Dobrý cíl je formulovaný z pohledu žáka, obsahuje aktivní sloveso a je
@@ -351,6 +560,17 @@ footer a{color:inherit}
         <label for="fCriterion">Kritérium <span class="opt">(volitelné)</span></label>
         <input id="fCriterion" type="text" placeholder="např. alespoň ve třech znacích" autocomplete="off">
       </div>
+    </div>
+
+    <div class="field dim-field">
+      <label for="fDim">Dimenze poznání <span class="opt">(volitelné)</span></label>
+      <select id="fDim">
+        <option value="">Nezvoleno</option>
+        <option value="A · Faktické poznatky">A — Faktické poznatky</option>
+        <option value="B · Konceptuální (pojmové) poznatky">B — Konceptuální (pojmové) poznatky</option>
+        <option value="C · Procedurální poznatky">C — Procedurální poznatky</option>
+        <option value="D · Metakognitivní poznatky">D — Metakognitivní poznatky</option>
+      </select>
     </div>
 
     <div class="rvp">
@@ -633,6 +853,7 @@ const fVerb = document.getElementById('fVerb');
 const fContent = document.getElementById('fContent');
 const fCondition = document.getElementById('fCondition');
 const fCriterion = document.getElementById('fCriterion');
+const fDim = document.getElementById('fDim');
 const fArea = document.getElementById('fArea');
 const fNode = document.getElementById('fNode');
 const fOvuCode = document.getElementById('fOvuCode');
@@ -657,6 +878,7 @@ function buildGoal(){
   const node = fNode.value.trim();
   const ovuCode = fOvuCode.value.trim();
   const ovuText = fOvuText.value.trim();
+  const dim = fDim.value.trim();
 
   if(!verb && !content){
     result.innerHTML = '<span class="ph">Cíl se začne skládat, jakmile vyplníte sloveso a obsah…</span>';
@@ -682,6 +904,10 @@ function buildGoal(){
 
   // verze na obrazovku (HTML)
   let html = escapeHtml(s);
+  if(dim){
+    html += '<div class="goal-dim"><span class="goal-dim-label">Dimenze poznání</span>'
+         +  '<span class="goal-dim-val">' + escapeHtml(dim) + '</span></div>';
+  }
   if(hasOvu){
     html += '<div class="goal-ovu"><span class="goal-ovu-label">Směřuje k OVU dle RVP 2025</span>';
     if(ovuHeader) html += '<span class="goal-ovu-code">' + escapeHtml(ovuHeader) + '</span>';
@@ -692,6 +918,7 @@ function buildGoal(){
 
   // verze pro schránku (prostý text)
   let copy = s;
+  if(dim) copy += '\n\nDimenze poznání: ' + dim;
   if(hasOvu){
     copy += '\n\nSměřuje k OVU dle RVP 2025:';
     if(ovuHeader) copy += '\n' + ovuHeader;
@@ -704,7 +931,7 @@ function escapeHtml(t){
   return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-[fVerb,fContent,fCondition,fCriterion,fArea,fNode,fOvuCode,fOvuText].forEach(el=>el.addEventListener('input', buildGoal));
+[fVerb,fContent,fCondition,fCriterion,fDim,fArea,fNode,fOvuCode,fOvuText].forEach(el=>el.addEventListener('input', buildGoal));
 
 document.getElementById('copyBtn').addEventListener('click', async ()=>{
   if(!lastCopyText) return;
@@ -721,7 +948,7 @@ document.getElementById('copyBtn').addEventListener('click', async ()=>{
 });
 
 document.getElementById('resetBtn').addEventListener('click', ()=>{
-  [fVerb,fContent,fCondition,fCriterion,fArea,fNode,fOvuCode,fOvuText].forEach(el=>el.value='');
+  [fVerb,fContent,fCondition,fCriterion,fDim,fArea,fNode,fOvuCode,fOvuText].forEach(el=>el.value='');
   selectedVerb = null;
   renderChips();
   buildGoal();
