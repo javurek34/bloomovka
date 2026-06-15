@@ -219,7 +219,43 @@ h3{
   font-size:clamp(17px,2.4vw,22px);line-height:1.45;min-height:64px;letter-spacing:-.02em;
 }
 .result .ph{color:#8A9082;font-weight:400;font-family:'Google Sans Flex',sans-serif;font-size:15px}
+.goal-ovu{margin-top:16px;padding-top:14px;border-top:1px dashed #5A6052;
+  display:flex;flex-direction:column;gap:5px;
+  font-family:'Google Sans Flex',sans-serif;font-weight:400;letter-spacing:0}
+.goal-ovu-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.goal-ovu-code{font-size:14px;font-weight:600;color:#E7E9E0}
+.goal-ovu-text{font-size:14px;color:#C3C7BA;line-height:1.5}
 .builder-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+.rvp{margin-top:26px;border-top:1px solid #4A5043;padding-top:22px}
+.rvp-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.rvp-head h3{color:#B9BDB2;margin:0}
+.rvp-tag{display:inline-block;font-weight:400;text-transform:none;letter-spacing:0;
+  font-size:11.5px;color:var(--accent);background:rgba(255,255,255,.08);
+  border-radius:99px;padding:2px 9px;margin-left:6px;vertical-align:middle}
+.rvp-link{font-size:13px;font-weight:600;color:var(--accent);text-decoration:none;white-space:nowrap}
+.rvp-link:hover{text-decoration:underline}
+.rvp-link:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.rvp-note{color:#9CA193;font-size:13px;margin:8px 0 4px;max-width:70ch}
+.rvp-fields{margin-top:16px}
+.rvp-wide{grid-column:1 / -1}
+.rvp-fields .field input{background:#2A2F26}
+.rvp-picker{margin-top:16px;display:grid;gap:14px}
+.rvp-picker .field select{
+  width:100%;font:inherit;font-size:15px;
+  background:#31372C;border:1px solid #4A5043;border-radius:10px;
+  color:#F2F3EE;padding:11px 13px;appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23B9BDB2' stroke-width='1.6'/></svg>");
+  background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;
+}
+.rvp-picker .field select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.rvp-picker .field select:disabled{opacity:.5;cursor:not-allowed}
+.rvp-status{font-size:13px;color:#9CA193;margin-top:14px}
+.rvp-status b{color:#E7E9E0;font-weight:600}
+.rvp-toggle{
+  margin-top:12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;
+  background:none;border:none;color:var(--accent);padding:0;text-decoration:underline;
+}
+.rvp-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .btn{
   font:inherit;font-size:14.5px;font-weight:600;cursor:pointer;
   border-radius:99px;padding:10px 22px;border:1px solid transparent;
@@ -295,7 +331,8 @@ footer a{color:inherit}
   <section class="builder" id="builder">
     <h2>Skladač výukového cíle</h2>
     <p class="sub">Dobrý cíl je formulovaný z pohledu žáka, obsahuje aktivní sloveso a je
-    ověřitelný. Osvědčená struktura: <strong>Žák + sloveso + obsah (učivo) + podmínky + kritérium úspěchu.</strong></p>
+    ověřitelný. Osvědčená struktura: <strong>Žák + sloveso + obsah (učivo) + podmínky + kritérium úspěchu.</strong>
+    Níže můžete cíl navázat na konkrétní očekávaný výsledek učení (OVU) podle RVP 2025.</p>
 
     <div class="fields">
       <div class="field">
@@ -316,10 +353,81 @@ footer a{color:inherit}
       </div>
     </div>
 
+    <div class="rvp">
+      <div class="rvp-head">
+        <h3>Vazba na RVP 2025 <span class="rvp-tag">očekávané výsledky učení (OVU)</span></h3>
+        <a class="rvp-link" href="https://prohlednout.rvp.cz/zakladni-vzdelavani" target="_blank" rel="noopener">Otevřít portál RVP ↗</a>
+      </div>
+      <p class="rvp-note" id="rvpNote">Vyberte kategorii, oblast, obor a uzlový bod — nabídne se seznam očekávaných výsledků učení. Zvolené OVU se připojí k cíli a zkopíruje se spolu s ním. Vazba je volitelná.</p>
+
+      <div class="rvp-picker" id="rvpPicker" hidden>
+        <div class="fields">
+          <div class="field">
+            <label for="selCat">Kategorie</label>
+            <select id="selCat"></select>
+          </div>
+          <div class="field">
+            <label for="selGroup">Vzdělávací oblast / skupina</label>
+            <select id="selGroup"></select>
+          </div>
+          <div class="field">
+            <label for="selObor">Obor / složka</label>
+            <select id="selObor"></select>
+          </div>
+          <div class="field">
+            <label for="selNode">Uzlový bod</label>
+            <select id="selNode"></select>
+          </div>
+        </div>
+        <div class="field rvp-wide">
+          <label for="selOvu">Očekávaný výsledek učení (OVU)</label>
+          <select id="selOvu"></select>
+        </div>
+      </div>
+
+      <p class="rvp-status" id="rvpStatus" hidden></p>
+      <button class="rvp-toggle" id="rvpToggle" type="button" hidden>Zadat OVU ručně</button>
+
+      <div class="fields rvp-fields" id="rvpManual" hidden>
+        <div class="field">
+          <label for="fArea">Vzdělávací oblast / obor</label>
+          <input id="fArea" type="text" list="areaList" placeholder="např. Člověk a příroda" autocomplete="off">
+          <datalist id="areaList">
+            <option value="Jazyk a jazyková komunikace"></option>
+            <option value="Matematika a její aplikace"></option>
+            <option value="Informatika"></option>
+            <option value="Člověk a jeho svět"></option>
+            <option value="Člověk a společnost"></option>
+            <option value="Člověk a příroda"></option>
+            <option value="Umění a kultura"></option>
+            <option value="Člověk a zdraví"></option>
+            <option value="Člověk a svět práce"></option>
+          </datalist>
+        </div>
+        <div class="field">
+          <label for="fNode">Uzlový bod</label>
+          <input id="fNode" type="text" list="nodeList" placeholder="5. ročník" autocomplete="off">
+          <datalist id="nodeList">
+            <option value="3. ročník (gramotnosti)"></option>
+            <option value="5. ročník"></option>
+            <option value="9. ročník"></option>
+          </datalist>
+        </div>
+        <div class="field">
+          <label for="fOvuCode">Kód OVU <span class="opt">(z portálu)</span></label>
+          <input id="fOvuCode" type="text" placeholder="např. ČaP-9-1-02" autocomplete="off">
+        </div>
+        <div class="field rvp-wide">
+          <label for="fOvuText">Znění OVU <span class="opt">(zkopírujte z portálu)</span></label>
+          <input id="fOvuText" type="text" placeholder="vložte přesné znění očekávaného výsledku učení…" autocomplete="off">
+        </div>
+      </div>
+    </div>
+
     <div class="result" id="result"><span class="ph">Cíl se začne skládat, jakmile vyplníte sloveso a obsah…</span></div>
 
     <div class="builder-actions">
-      <button class="btn btn-primary" id="copyBtn" type="button">Zkopírovat cíl</button>
+      <button class="btn btn-primary" id="copyBtn" type="button">Zkopírovat cíl i s vazbou</button>
       <button class="btn btn-ghost" id="resetBtn" type="button">Vymazat</button>
     </div>
 
@@ -330,6 +438,7 @@ footer a{color:inherit}
         <li>Obsahuje aktivní, pozorovatelné sloveso (ne „zná“, „chápe“, „rozumí“).</li>
         <li>Poznám na konci hodiny, zda byl splněn — je ověřitelný.</li>
         <li>Odpovídá úrovni náročnosti, kterou jsem pro hodinu zvolil(a).</li>
+        <li>Je-li to vhodné, směřuje k některému očekávanému výsledku učení (OVU) dle RVP.</li>
       </ul>
     </div>
   </section>
@@ -524,7 +633,12 @@ const fVerb = document.getElementById('fVerb');
 const fContent = document.getElementById('fContent');
 const fCondition = document.getElementById('fCondition');
 const fCriterion = document.getElementById('fCriterion');
+const fArea = document.getElementById('fArea');
+const fNode = document.getElementById('fNode');
+const fOvuCode = document.getElementById('fOvuCode');
+const fOvuText = document.getElementById('fOvuText');
 const result = document.getElementById('result');
+let lastCopyText = '';
 
 function pickVerb(v, third){
   selectedVerb = v;
@@ -539,10 +653,17 @@ function buildGoal(){
   const content = fContent.value.trim();
   const cond = fCondition.value.trim();
   const crit = fCriterion.value.trim();
+  const area = fArea.value.trim();
+  const node = fNode.value.trim();
+  const ovuCode = fOvuCode.value.trim();
+  const ovuText = fOvuText.value.trim();
+
   if(!verb && !content){
     result.innerHTML = '<span class="ph">Cíl se začne skládat, jakmile vyplníte sloveso a obsah…</span>';
+    lastCopyText = '';
     return;
   }
+
   let s = 'Žák';
   if(verb) s += ' ' + verb;
   if(content) s += ' ' + content;
@@ -550,19 +671,48 @@ function buildGoal(){
   if(crit) s += ', ' + crit;
   s = s.replace(/\s+/g,' ').trim();
   if(!/[.!?]$/.test(s)) s += '.';
-  result.textContent = s;
+
+  // sestavení vazby na RVP
+  const ovuParts = [];
+  if(ovuCode) ovuParts.push(ovuCode);
+  if(area) ovuParts.push(area);
+  if(node) ovuParts.push(node);
+  const ovuHeader = ovuParts.join(' · ');
+  const hasOvu = ovuHeader || ovuText;
+
+  // verze na obrazovku (HTML)
+  let html = escapeHtml(s);
+  if(hasOvu){
+    html += '<div class="goal-ovu"><span class="goal-ovu-label">Směřuje k OVU dle RVP 2025</span>';
+    if(ovuHeader) html += '<span class="goal-ovu-code">' + escapeHtml(ovuHeader) + '</span>';
+    if(ovuText) html += '<span class="goal-ovu-text">„' + escapeHtml(ovuText) + '“</span>';
+    html += '</div>';
+  }
+  result.innerHTML = html;
+
+  // verze pro schránku (prostý text)
+  let copy = s;
+  if(hasOvu){
+    copy += '\n\nSměřuje k OVU dle RVP 2025:';
+    if(ovuHeader) copy += '\n' + ovuHeader;
+    if(ovuText) copy += '\n„' + ovuText + '“';
+  }
+  lastCopyText = copy;
 }
 
-[fVerb,fContent,fCondition,fCriterion].forEach(el=>el.addEventListener('input', buildGoal));
+function escapeHtml(t){
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+[fVerb,fContent,fCondition,fCriterion,fArea,fNode,fOvuCode,fOvuText].forEach(el=>el.addEventListener('input', buildGoal));
 
 document.getElementById('copyBtn').addEventListener('click', async ()=>{
-  const text = result.textContent;
-  if(text.startsWith('Cíl se začne')) return;
+  if(!lastCopyText) return;
   try{
-    await navigator.clipboard.writeText(text);
+    await navigator.clipboard.writeText(lastCopyText);
   }catch(e){
     const ta = document.createElement('textarea');
-    ta.value = text; document.body.appendChild(ta);
+    ta.value = lastCopyText; document.body.appendChild(ta);
     ta.select(); document.execCommand('copy'); ta.remove();
   }
   const toast = document.getElementById('toast');
@@ -571,12 +721,186 @@ document.getElementById('copyBtn').addEventListener('click', async ()=>{
 });
 
 document.getElementById('resetBtn').addEventListener('click', ()=>{
-  [fVerb,fContent,fCondition,fCriterion].forEach(el=>el.value='');
+  [fVerb,fContent,fCondition,fCriterion,fArea,fNode,fOvuCode,fOvuText].forEach(el=>el.value='');
   selectedVerb = null;
   renderChips();
   buildGoal();
 });
 
+/* ---------- vazba na RVP: načtení OVU dat a kaskádové nabídky ---------- */
+const selCat = document.getElementById('selCat');
+const selGroup = document.getElementById('selGroup');
+const selObor = document.getElementById('selObor');
+const selNode = document.getElementById('selNode');
+const selOvu = document.getElementById('selOvu');
+const rvpPicker = document.getElementById('rvpPicker');
+const rvpManual = document.getElementById('rvpManual');
+const rvpStatus = document.getElementById('rvpStatus');
+const rvpToggle = document.getElementById('rvpToggle');
+const rvpNote = document.getElementById('rvpNote');
+let OVU = null;
+
+function opt(sel, label, value, disabled){
+  const o = document.createElement('option');
+  o.textContent = label;
+  if(value !== undefined) o.value = value;
+  if(disabled) o.disabled = true;
+  sel.appendChild(o);
+}
+function clearSel(sel, placeholder){
+  sel.innerHTML = '';
+  opt(sel, placeholder, '');
+}
+function shorten(t, n){ return t.length > n ? t.slice(0, n-1) + '…' : t; }
+function idx(sel){ return sel.value === '' ? -1 : +sel.value; }
+
+function fillFromPicker(){
+  const c = idx(selCat), g = idx(selGroup), o = idx(selObor), n = idx(selNode), i = idx(selOvu);
+  if([c,g,o,n,i].some(x=>x < 0)){ buildGoal(); return; }
+  const skupina = OVU.kategorie[c].skupiny[g];
+  const obor = skupina.obory[o];
+  const node = obor.uzloveBody[n];
+  const ovu = node.ovu[i];
+  fArea.value = obor.nazev || skupina.nazev;
+  fNode.value = node.uzlovyBod;
+  fOvuCode.value = ovu.kod || '';
+  fOvuText.value = ovu.zneni || '';
+  buildGoal();
+}
+
+function populateGroups(){
+  const c = idx(selCat);
+  clearSel(selGroup, 'Vyberte oblast…'); selGroup.disabled = false;
+  clearSel(selObor, '—'); selObor.disabled = true;
+  clearSel(selNode, '—'); selNode.disabled = true;
+  clearSel(selOvu, '—'); selOvu.disabled = true;
+  if(c < 0){ selGroup.disabled = true; return; }
+  OVU.kategorie[c].skupiny.forEach((s,gi)=>opt(selGroup, s.nazev, gi));
+}
+function populateObory(){
+  const c = idx(selCat), g = idx(selGroup);
+  clearSel(selObor, 'Vyberte obor…'); selObor.disabled = false;
+  clearSel(selNode, '—'); selNode.disabled = true;
+  clearSel(selOvu, '—'); selOvu.disabled = true;
+  if(g < 0){ selObor.disabled = true; return; }
+  OVU.kategorie[c].skupiny[g].obory.forEach((o,oi)=>opt(selObor, o.nazev || '(bez názvu)', oi));
+}
+function populateNodes(){
+  const c = idx(selCat), g = idx(selGroup), o = idx(selObor);
+  clearSel(selNode, 'Vyberte uzlový bod…'); selNode.disabled = false;
+  clearSel(selOvu, '—'); selOvu.disabled = true;
+  if(o < 0){ selNode.disabled = true; return; }
+  OVU.kategorie[c].skupiny[g].obory[o].uzloveBody.forEach((ub,ni)=>opt(selNode, ub.uzlovyBod, ni));
+}
+function populateOvu(){
+  const c = idx(selCat), g = idx(selGroup), o = idx(selObor), n = idx(selNode);
+  clearSel(selOvu, 'Vyberte OVU…'); selOvu.disabled = false;
+  if(n < 0){ selOvu.disabled = true; return; }
+  OVU.kategorie[c].skupiny[g].obory[o].uzloveBody[n].ovu.forEach((ovu,ii)=>{
+    const code = ovu.kod ? ovu.kod + ' — ' : '';
+    opt(selOvu, code + shorten(ovu.zneni, 70), ii);
+  });
+}
+
+selCat.addEventListener('change', ()=>{ populateGroups(); fillFromPicker(); });
+selGroup.addEventListener('change', ()=>{ populateObory(); fillFromPicker(); });
+selObor.addEventListener('change', ()=>{ populateNodes(); fillFromPicker(); });
+selNode.addEventListener('change', ()=>{ populateOvu(); fillFromPicker(); });
+selOvu.addEventListener('change', fillFromPicker);
+
+rvpToggle.addEventListener('click', ()=>{
+  const show = rvpManual.hasAttribute('hidden');
+  rvpManual.toggleAttribute('hidden', !show);
+  rvpToggle.textContent = show ? 'Skrýt ruční zadání' : 'Zadat OVU ručně';
+});
+
+function showManualMode(message){
+  rvpPicker.setAttribute('hidden','');
+  rvpManual.removeAttribute('hidden');
+  rvpToggle.setAttribute('hidden','');
+  if(message){ rvpStatus.innerHTML = message; rvpStatus.removeAttribute('hidden'); }
+}
+
+function initOvu(data){
+  OVU = data;
+  clearSel(selCat, 'Vyberte kategorii…');
+  OVU.kategorie.forEach((k,ci)=>opt(selCat, k.nazev, ci));
+  populateGroups();
+  rvpPicker.removeAttribute('hidden');
+  rvpToggle.removeAttribute('hidden');
+  rvpStatus.setAttribute('hidden','');
+}
+
+/* ---------- převod oficiálních dat RVP (stejná logika jako na opendata.npi.cz) ---------- */
+function sberUzlovychBodu(uzel, mapa){
+  if(!uzel || typeof uzel !== 'object') return;
+  (uzel.uzloveBody || []).forEach(ub=>{
+    const nazev = (ub.nazev || '').trim() || '—';
+    const seznam = mapa[nazev] || (mapa[nazev] = []);
+    (ub.ocekavaneVysledkyUceni || []).forEach(o=>{
+      const zneni = (o.zneni || '').trim();
+      if(zneni) seznam.push({ kod: (o.kod || '').trim(), zneni });
+    });
+  });
+  Object.values(uzel).forEach(v=>{
+    if(Array.isArray(v)) v.forEach(p=>{ if(p && typeof p === 'object') sberUzlovychBodu(p, mapa); });
+  });
+}
+function zpracujKategorii(nazevKat, polozky, klicPotomku){
+  const skupiny = [];
+  (polozky || []).forEach(skupina=>{
+    const obory = [];
+    const potomci = skupina[klicPotomku] || [];
+    const pridej = (uzel, nazev, kod)=>{
+      const mapa = {}; sberUzlovychBodu(uzel, mapa);
+      const uzlove = Object.keys(mapa).filter(k=>mapa[k].length)
+        .map(k=>({ uzlovyBod: k, ovu: mapa[k] }));
+      if(uzlove.length) obory.push({ nazev: (nazev||'').trim(), kod: (kod||'').trim(), uzloveBody: uzlove });
+    };
+    if(potomci.length) potomci.forEach(o=>pridej(o, o.nazev, o.kod));
+    else pridej(skupina, skupina.nazev, skupina.kod);
+    if(obory.length) skupiny.push({ nazev: (skupina.nazev||'').trim(), obory });
+  });
+  return { nazev: nazevKat, skupiny };
+}
+function prevedRvp(data){
+  const kategorie = [
+    zpracujKategorii('Vzdělávací obory', data.vzdelavaciOblasti, 'vzdelavaciObory'),
+    zpracujKategorii('Klíčové kompetence', data.klicoveKompetence, 'slozkyKlicoveKompetence'),
+    zpracujKategorii('Základní gramotnosti', data.zakladniGramotnosti, 'slozkyZakladniGramotnosti'),
+    zpracujKategorii('Průřezová témata', data.prurezovaTemata, 'slozkyPrurezovehoTematu'),
+  ].filter(k=>k.skupiny.length);
+  return { kategorie };
+}
+
+/* ---------- načtení dat: lokální oficiální soubor → živá data NPI → ruční zadání ---------- */
+const RVP_LIVE_URL = 'https://opendata.npi.cz/download/rvp/data_final_rvp_zv_basic_20250624.json';
+
+function zpracujNactenaData(raw){
+  // přijme buď oficiální strukturu NPI, nebo už převedený tvar {kategorie:[…]}
+  const data = (raw && Array.isArray(raw.kategorie)) ? raw : prevedRvp(raw);
+  if(data && Array.isArray(data.kategorie) && data.kategorie.length){ initOvu(data); return true; }
+  return false;
+}
+
+async function nactiOvu(){
+  // 1) lokální soubor v repozitáři (oficiální data stažená z opendata.npi.cz)
+  for(const url of ['rvp-data.json', 'ovu-zv.json']){
+    try{
+      const r = await fetch(url);
+      if(r.ok && zpracujNactenaData(await r.json())) return;
+    }catch(e){ /* zkusíme dál */ }
+  }
+  // 2) živé stažení přímo z NPI (funguje, pokud to server povolí)
+  try{
+    const r = await fetch(RVP_LIVE_URL);
+    if(r.ok && zpracujNactenaData(await r.json())) return;
+  }catch(e){ /* spadneme na ruční zadání */ }
+  // 3) ruční zadání
+  showManualMode('Online data RVP se teď nepodařilo načíst — OVU zatím zadejte ručně (kód a znění zkopírujte z portálu). Jak zařídit, aby se OVU nabízela automaticky, je popsáno v souboru README.');
+}
+
+nactiOvu();
 selectLevel(0);
 </script>
 </body>
